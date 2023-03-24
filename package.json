@@ -1,0 +1,12 @@
+{
+  "name": "todo_list",
+  "version": "1.0.0",
+  "main": "index.js",
+    "workspaces": [
+    "packages/*"
+  ],
+  "private": "true",
+  "repository": "git@github.com:ansike/todo_list.git",
+  "author": "ansike <ansike@bytedance.com>",
+  "license": "MIT"
+}
