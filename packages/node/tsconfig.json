@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "allowJs": false,
+    "baseUrl": "./",
+    "sourceMap": true,
+    "outDir": "output",
+    "incremental": true,
+    "lib": ["DOM", "ES2017", "ES2018", "ES2019", "ES2020", "ESNext"]
+  },
+  "include": ["src"],
+  "extends": "./tsconfig.base.json"
+}
