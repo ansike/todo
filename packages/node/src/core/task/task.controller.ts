@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   Session,
+  Req,
 } from '@nestjs/common';
 import { OPERATION_TYPE } from 'src/contant/const';
 import { Task } from './task.entity';
@@ -18,11 +19,8 @@ export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @Get()
-  async findAndCountAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return await this.taskService.findAndCountAll(page, limit);
+  async findAndCountAll(@Req() req) {
+    return await this.taskService.findAndCountAll(req);
   }
 
   @Get(':id')
@@ -37,10 +35,11 @@ export class TaskController {
 
   @Put(':id')
   async update(
+    @Session() session,
     @Param('id') id: string,
-    @Body() task: Task & { updateType: OPERATION_TYPE },
+    @Body() task: Task & { operationType: OPERATION_TYPE },
   ): Promise<Task> {
-    return await this.taskService.update(id, task);
+    return await this.taskService.update(session, id, task);
   }
 
   @Delete(':id')

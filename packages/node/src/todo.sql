@@ -1,6 +1,6 @@
-CREATE USER IF NOT EXISTS todo_user IDENTIFIED BY 'todopw';
-CREATE DATABASE IF NOT EXISTS todo_db DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
-GRANT ALL ON todo_db.* TO todo_user @'%';
+CREATE USER IF NOT EXISTS `todo_user` IDENTIFIED BY 'todopw';
+CREATE DATABASE IF NOT EXISTS `todo_db` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+GRANT ALL ON todo_db.* TO todo_user@'%';
 flush privileges;
 USE todo_db;
 -- 用户表
@@ -24,8 +24,9 @@ CREATE TABLE IF NOT EXISTS `task` (
   `description` text COMMENT '任务描述',
   `creator_id` char(36) NOT NULL COMMENT '创建者ID',
   `assignee_id` char(36) DEFAULT NULL COMMENT '指派者ID',
-  `plan_finish_time` timestamp DEFAULT '1970-01-01 00:00:01' COMMENT '计划完成时间',
-  `actual_finish_time` timestamp DEFAULT '1970-01-01 00:00:01' COMMENT '实际完成时间',
+  `status` char(36) DEFAULT 'created' COMMENT '任务状态',
+  `plan_finish_time` timestamp DEFAULT '1970-01-01 08:00:01' COMMENT '计划完成时间',
+  `actual_finish_time` timestamp DEFAULT '1970-01-01 08:00:01' COMMENT '实际完成时间',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '任务表';

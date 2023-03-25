@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { Repository } from 'typeorm';
 import { PaginatedUsers } from './user.controller';
 import { User } from './user.entity';
-const userKeys: (keyof User)[] = [
+export const userKeys: (keyof User)[] = [
   'id',
   'username',
   'nickname',

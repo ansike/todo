@@ -19,7 +19,7 @@ const routes = [
       {
         // 默认路由
         path: "",
-        element: <Navigate to="/login" replace />,
+        element: <Navigate to="/todo" replace />,
       },
     ],
   },

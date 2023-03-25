@@ -1,6 +1,6 @@
 export const request = function request<T>(
   url: string,
-  config: Record<string, any> = {}
+  config: { method?: string; data?: any; [k: string]: any } = {}
 ) {
   if (typeof url !== "string")
     throw new TypeError(` ${url} is not an string! `);
@@ -9,7 +9,7 @@ export const request = function request<T>(
 
   // 区分get请求和post请求传递参数
   delete config.data;
-  if (method.toUpperCase() === "POST") {
+  if (method.toUpperCase() !== "GET") {
     config.body = JSON.stringify(data);
   } else {
     const query = new URLSearchParams(data).toString();

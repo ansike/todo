@@ -10,3 +10,10 @@ export enum OPERATION_TYPE {
   DONE,
   RESTART,
 }
+
+// 任务的状态
+export const TASK_STATUS = {
+  created: 'created',
+  closed: 'closed',
+  done: 'done',
+};

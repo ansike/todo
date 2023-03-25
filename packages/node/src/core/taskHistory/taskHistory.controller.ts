@@ -15,12 +15,13 @@ import { TaskHistoryService } from './taskHistory.service';
 export class TaskHistoryController {
   constructor(private taskHistoryService: TaskHistoryService) {}
 
-  @Get()
+  @Get(':taskId')
   async findAndCountAll(
+    @Param('taskId') taskId: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return await this.taskHistoryService.findAndCountAll(page, limit);
+    return await this.taskHistoryService.findAndCountAll(taskId, page, limit);
   }
 
   @Get(':id')

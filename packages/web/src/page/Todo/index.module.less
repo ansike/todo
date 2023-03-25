@@ -2,7 +2,88 @@
   padding-top: 60px;
   width: 800px;
   margin: 0 auto;
-  .table{
-    
+}
+.header{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  .right{
+    display: flex;
+    .filterItem{
+      margin-left: 8px;
+    }
+  }
+}
+.drawer {
+  width: 500px;
+  :global {
+    .arco-drawer-header-title {
+      width: 100%;
+    }
+  }
+  .title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .id {
+    font-size: 14px;
+  }
+  .handle {
+    display: flex;
+    .handleItem {
+      padding: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 4px;
+      &:hover {
+        background-color: #f1eded;
+      }
+    }
+  }
+  .detailItem {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 16px;
+    .ipt {
+      border: 0;
+      background: none;
+      padding-left: 0;
+    }
+    .detailLeft {
+      width: 24px;
+      margin-right: 6px;
+    }
+  }
+}
+.historyDrawer {
+  .historyTitle {
+    font-size: 12px;
+    color: #ccc;
+  }
+  .id{
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+  .back {
+    font-size: 20px;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 4px;
+    &:hover {
+      background-color: #f1eded;
+    }
+  }
+  .description {
+    font-size: 14px;
+    color: black;
+    .operator {
+      color: #4e4eea;
+      margin-right: 4px;
+    }
   }
 }

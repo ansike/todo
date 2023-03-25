@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Logger } from '@nestjs/common';
 import get from 'lodash/get';
 
-export const whitePathList = [/\/favicon\.ico/, /\/api\/auth\/checkLogin/];
+export const whitePathList = [/\/favicon\.ico/, /\/api\/auth/];
 
 export function CheckLoginMiddleware(app) {
   const logger = new Logger('checklogin');

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Task {
@@ -14,23 +14,27 @@ export class Task {
 
   @Column()
   creator_id: string;
-
+  
   @Column({ nullable: true })
   assignee_id: string;
+  
+  @Column()
+  plan_finish_time: Date = new Date(0);
+  
+  @Column()
+  status: string;
 
   @Column()
-  plan_finish_time: Date;
-
-  @Column({ default: new Date('1970-01-01 00:00:01') })
-  actual_finish_time: Date;
+  actual_finish_time: Date = new Date(0);
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   create_time: Date;
 
-  constructor(partial: Partial<Task>) {
-    Object.assign(this, partial);
-    if (!this.id) {
-      this.id = uuidv4();
-    }
-  }
+  @ManyToOne(() => User, user => user.tasks, { eager: true })
+  @JoinColumn({ name: 'creator_id', referencedColumnName: 'id'})
+  createUser: User;
+
+  @ManyToOne(() => User, user => user.tasks, { eager: true })
+  @JoinColumn({ name: 'assignee_id' })
+  assigneeUser: User;
 }

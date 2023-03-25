@@ -17,8 +17,6 @@ export class UserController {
     @Query('limit') limit: number = 10,
     @Req() req
   ): Promise<PaginatedUsers> {
-    console.log(req.session);
-    
     return this.userService.findAll(page, limit);
   }
 

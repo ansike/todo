@@ -12,6 +12,7 @@ import { TaskModule } from './core/task/task.module';
 import { LoggingMiddleware } from './middleware/log.middleware';
 import { TaskHistoryModule } from './core/taskHistory/taskHistory.module';
 import { TaskHistory } from './core/taskHistory/taskHistory.entity';
+import { TaskMember } from './core/task/task.member.entity';
 
 const logger = new Logger('app.module');
 
@@ -60,7 +61,7 @@ const getEnvFile = () => {
         const config = configService.get('mysql');
         logger.log(`mysql config host:${config.host} port:${config.port} username: ${config.username}`);
         logger.debug(`mysql config password: ${JSON.stringify(config.password)}`);
-        return { ...config, entities: [User, Task, TaskHistory] };
+        return { ...config, entities: [User, Task, TaskHistory, TaskMember] };
       },
       inject: [ConfigService],
     }),

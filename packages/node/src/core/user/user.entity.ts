@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany, JoinColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { Task } from '../task/task.entity';
+import { TaskHistory } from '../taskHistory/taskHistory.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -27,6 +29,14 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
+
+  @OneToMany(() => Task, task => task.createUser)
+  @JoinColumn({ name: 'creator_id' })
+  tasks: Task[];
+
+  @OneToMany(() => TaskHistory, task => task.operate_user)
+  @JoinColumn({ name: 'operator_id' })
+  task_histories: TaskHistory[];
 
   @BeforeInsert()
   generateUUID() {
