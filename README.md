@@ -10,3 +10,8 @@ mysql -uroot -ptodopw -h127.0.0.1
 mysql -uroot -ptodopw -h127.0.0.1 < packages/node/src/todo.sql
 ```
 
+登录态使用redis
+```shell
+docker run -d -p 6379:6379 --name todo-redis -d redis
+
+```

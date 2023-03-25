@@ -8,6 +8,7 @@ import {
   Body,
   Query,
 } from '@nestjs/common';
+import { OPERATION_TYPE } from 'src/contant/const';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';
 
@@ -34,7 +35,10 @@ export class TaskController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() task: Task): Promise<Task> {
+  async update(
+    @Param('id') id: string,
+    @Body() task: Task & { updateType: OPERATION_TYPE },
+  ): Promise<Task> {
     return await this.taskService.update(id, task);
   }
 

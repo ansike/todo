@@ -2,7 +2,7 @@ import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RouterModule, Routes } from 'nest-router';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TestModule } from './core/test/test.module';
+import { AuthModule } from './core/auth/auth.module';
 import { IndexModule } from './core/index/index.module';
 import { UserModule } from './core/user/user.module';
 import Configuration from './config/configuration';
@@ -10,6 +10,8 @@ import { User } from './core/user/user.entity';
 import { Task } from './core/task/task.entity';
 import { TaskModule } from './core/task/task.module';
 import { LoggingMiddleware } from './middleware/log.middleware';
+import { TaskHistoryModule } from './core/taskHistory/taskHistory.module';
+import { TaskHistory } from './core/taskHistory/taskHistory.entity';
 
 const logger = new Logger('app.module');
 
@@ -18,8 +20,8 @@ export const routes: Routes = [
     path: '/api',
     children: [
       {
-        path: '/test',
-        module: TestModule,
+        path: '/auth',
+        module: AuthModule,
       },
       {
         path: '/user',
@@ -28,6 +30,10 @@ export const routes: Routes = [
       {
         path: '/task',
         module: TaskModule,
+      },
+      {
+        path: '/taskHistory',
+        module: TaskHistoryModule,
       },
     ],
   },
@@ -54,14 +60,15 @@ const getEnvFile = () => {
         const config = configService.get('mysql');
         logger.log(`mysql config host:${config.host} port:${config.port} username: ${config.username}`);
         logger.debug(`mysql config password: ${JSON.stringify(config.password)}`);
-        return { ...config, entities: [User, Task] };
+        return { ...config, entities: [User, Task, TaskHistory] };
       },
       inject: [ConfigService],
     }),
     RouterModule.forRoutes(routes),
     UserModule,
     TaskModule,
-    TestModule,
+    TaskHistoryModule,
+    AuthModule,
     IndexModule,
   ],
   controllers: [],

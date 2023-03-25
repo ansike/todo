@@ -1,9 +1,12 @@
+import { SessionOptions } from "src/middleware/session.middlreware";
+
 export interface IAuthConfig {
   client_id: string;
   client_secret: string;
   auth_host: string;
 }
 export interface IConfig {
+  redis: SessionOptions;
   mysql: {
     type: string;
     host: string;
@@ -18,6 +21,12 @@ export interface IConfig {
 
 export default async (): Promise<IConfig> => {
   return {
+    redis: {
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT),
+      name: process.env.REDIS_KEY,
+      password: process.env.REDIS_PASSWORD || undefined,
+    },
     mysql: {
       type: 'mysql',
       host: process.env.MYSQL_HOST,
