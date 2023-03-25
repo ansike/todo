@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { IConfig } from './config/configuration';
+import { CheckLoginMiddleware } from './middleware/checkLogin.middleware';
 import { HttpExceptionFilter } from './middleware/httpException.filter';
 import { SessionMiddleware } from './middleware/session.middlreware';
 
@@ -11,7 +12,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const redisConfig = configService.get<IConfig['redis']>('redis');
   app.use(SessionMiddleware(redisConfig));
+  app.use(CheckLoginMiddleware(app));
   app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

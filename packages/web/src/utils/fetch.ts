@@ -1,5 +1,3 @@
-import qs from "qs";
-
 export const request = function request<T>(
   url: string,
   config: Record<string, any> = {}
@@ -12,17 +10,20 @@ export const request = function request<T>(
   // 区分get请求和post请求传递参数
   delete config.data;
   if (method.toUpperCase() === "POST") {
-    config.body = qs.stringify(data);
+    config.body = JSON.stringify(data);
   } else {
     const query = new URLSearchParams(data).toString();
     url = `${url}${query ? "?" + query : ""}`;
   }
 
   return new Promise<T>((resolve, reject) => {
-    fetch(url, config)
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      ...config,
+    })
       .then(async (res) => {
-        console.log();
-
         const response = res.headers
           .get("content-type")
           ?.toLocaleLowerCase()

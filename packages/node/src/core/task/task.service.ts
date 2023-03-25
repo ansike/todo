@@ -32,11 +32,12 @@ export class TaskService {
     return await this.taskRepository.findOneBy({ id });
   }
 
-  async create(task: Task): Promise<Task> {
+  async create(session, task: Task): Promise<Task> {
     const newTask = await this.taskRepository.save(task);
+    const { user } = session;
     this.taskHistoryService.create({
       task_id: newTask.id,
-      operator_id: newTask.creator_id,
+      operator_id: user.id,
       operation: OPERATION_TYPE.CREATE,
       result: '创建一个任务',
       operationTime: new Date(),

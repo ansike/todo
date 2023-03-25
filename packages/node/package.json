@@ -28,6 +28,7 @@
     "bcryptjs": "^2.4.3",
     "connect-redis": "^5.0.0",
     "express-session": "^1.17.3",
+    "lodash": "^4.17.21",
     "mysql": "^2.18.1",
     "nest-router": "^1.0.9",
     "redis": "^3.0.2",

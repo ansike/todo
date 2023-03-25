@@ -11,9 +11,14 @@ export class AuthController {
     @Body('username') username: string,
     @Body('password') password: string,
   ): Promise<User | string> {
-    const user = this.authService.login(username, password);
+    const user = await this.authService.login(username, password);
     if (typeof user !== 'string') session.user = user;
-    return user
+    return user;
+  }
+
+  @Get('checkLogin')
+  async checkLogin(@Session() session): Promise<User | string> {
+    return session.user;
   }
 
   @Post('logout')

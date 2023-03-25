@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Query,
+  Session,
 } from '@nestjs/common';
 import { OPERATION_TYPE } from 'src/contant/const';
 import { Task } from './task.entity';
@@ -30,8 +31,8 @@ export class TaskController {
   }
 
   @Post()
-  async create(@Body() task: Task): Promise<Task> {
-    return await this.taskService.create(task);
+  async create(@Session() session, @Body() task: Task): Promise<Task> {
+    return await this.taskService.create(session, task);
   }
 
   @Put(':id')
