@@ -13,10 +13,10 @@ export class UserController {
 
   @Get()
   async findAll(
-    @Query('offset') offset: number = 0,
+    @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ): Promise<PaginatedUsers> {
-    return this.userService.findAll(offset, limit);
+    return this.userService.findAll(page, limit);
   }
 
   @Get(':id')

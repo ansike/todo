@@ -15,19 +15,19 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';
 
 -- 任务表
+DROP TABLE IF EXISTS `task`;
 CREATE TABLE IF NOT EXISTS `task` (
   `id` char(36) NOT NULL COMMENT '任务ID',
   `title` varchar(255) NOT NULL COMMENT '任务标题',
   `description` text COMMENT '任务描述',
   `creator_id` char(36) NOT NULL COMMENT '创建者ID',
   `assignee_id` char(36) DEFAULT NULL COMMENT '指派者ID',
-  `plan_finish_time` timestamp NOT NULL COMMENT '计划完成时间',
+  `plan_finish_time` timestamp DEFAULT '1970-01-01 00:00:01' COMMENT '计划完成时间',
   `actual_finish_time` timestamp DEFAULT '1970-01-01 00:00:01' COMMENT '实际完成时间',
-  `priority` int NOT NULL COMMENT '任务优先级',
-  `status` int NOT NULL COMMENT '任务状态',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '任务表';
+
 -- 任务历史记录表
 CREATE TABLE IF NOT EXISTS `task_history` (
   `id` char(36) NOT NULL COMMENT '历史记录ID',

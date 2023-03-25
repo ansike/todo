@@ -10,9 +10,9 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async findAll(offset: number, limit: number): Promise<PaginatedUsers> {
+  async findAll(page: number, limit: number): Promise<PaginatedUsers> {
     const [data, total] = await this.userRepository.findAndCount({
-      skip: offset,
+      skip: (page - 1) * limit,
       take: limit,
     });
     console.log(1);
