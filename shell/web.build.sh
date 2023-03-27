@@ -13,8 +13,4 @@ WEB_DIR=packages/web
 
 yarn --force
 
-cd $HOME_DIR/$WEB_DIR
 yarn build
-
-mkdir -p $SCM_OUTPUT_DIR
-cp -r $HOME_DIR/$WEB_DIR/build/. $SCM_OUTPUT_DIR

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { Logger } from '@nestjs/common';
 import get from 'lodash/get';
 
+export const whitePathList = [/\/favicon\.ico/, /\/api\/auth/];
+
 export function CheckLoginMiddleware(app) {
   const logger = new Logger('checklogin');
   return async function CheckLoginMiddlewareFunction(
@@ -12,11 +14,14 @@ export function CheckLoginMiddleware(app) {
     const { query } = req;
 
     // 路由白名单判断
-    if (!req.path.startsWith('/api')) {
+    // if (
+    //   !req.path.startsWith('/api') ||
+    //   whitePathList.some((reg) => reg.test(req.path))
+    // ) {
       logger.log(`[whitePathList] path:${req.path}`);
       next();
       return;
-    }
+    // }
 
     if ((req as any).session && get(req, 'session.user')) {
       next();

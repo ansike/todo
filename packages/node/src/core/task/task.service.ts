@@ -1,6 +1,6 @@
 import { Inject, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OPERATION_TYPE } from 'src/contant/const';
+import { OPERATION_TYPE, TASK_STATUS } from 'src/contant/const';
 import { Repository } from 'typeorm';
 import { TaskHistoryService } from '../taskHistory/taskHistory.service';
 import { User } from '../user/user.entity';
@@ -32,8 +32,8 @@ export class TaskService {
       create_time,
       plan_finish_time,
       actual_finish_time,
+      status = TASK_STATUS.created,
     } = req.query;
-    console.log(req.query);
 
     const queryBuilder = this.taskRepository
       .createQueryBuilder('task')
@@ -46,11 +46,19 @@ export class TaskService {
         'task.plan_finish_time',
         'task.actual_finish_time',
         'task.create_time',
+        'task.status',
         ...userKeys.map((k) => `createUser.${k}`),
       ])
       .addSelect(userKeys.map((k) => `assigneeUser.${k}`))
       .leftJoin('task.createUser', 'createUser')
       .leftJoin('task.assigneeUser', 'assigneeUser');
+
+    // 非全部任务时执行where查询
+    if (status !== 'all') {
+      queryBuilder.andWhere('task.status = :status ', {
+        status,
+      });
+    }
     if (creator_id) {
       queryBuilder.andWhere('task.creator_id = :creatorId ', {
         creatorId: creator_id,
@@ -106,6 +114,7 @@ export class TaskService {
         'task.plan_finish_time',
         'task.actual_finish_time',
         'task.create_time',
+        'task.status',
         ...userKeys.map((k) => `createUser.${k}`),
       ])
       .addSelect(userKeys.map((k) => `assigneeUser.${k}`))
@@ -204,6 +213,16 @@ export class TaskService {
           plan_finish_time: task.plan_finish_time,
         });
         return task.plan_finish_time + '';
+      case OPERATION_TYPE.DONE:
+        await this.taskRepository.update(id, {
+          status: TASK_STATUS.done,
+        });
+        return '';
+      case OPERATION_TYPE.RESTART:
+        await this.taskRepository.update(id, {
+          status: TASK_STATUS.restart,
+        });
+        return '';
       default:
         break;
     }

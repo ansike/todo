@@ -78,3 +78,8 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `is_read` boolean NOT NULL DEFAULT false COMMENT '是否已读',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '消息提醒';
+
+-- 两个密码都是 xxxxxx
+INSERT INTO `user` VALUES 
+('6ffbb19f-3620-4874-bcb2-32644f31dd00','A1','A1','A@qq.com','$2a$10$uT7jhXMtlkllYkKykrkvyezpLBseymsgOUgcS0YrZ1xfhYAQi06/K','2023-03-27 15:05:28','2023-03-27 15:05:28'),
+('d340b625-dc1b-41a3-910e-c35a3e2aa539','A2','A2','A@qq.com','$2a$10$uT7jhXMtlkllYkKykrkvyezpLBseymsgOUgcS0YrZ1xfhYAQi06/K','2023-03-27 15:05:28','2023-03-27 15:05:28');

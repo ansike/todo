@@ -6,8 +6,8 @@ set -e
 
 # 设置目录变量
 HOME_DIR=$(pwd)
-WEB_DIR=$HOME_DIR/web
-SCM_OUTPUT_DIR=$HOME_DIR/node
+WEB_DIR=$HOME_DIR/packages/web/build
+SCM_OUTPUT_DIR=$HOME_DIR/output
 NODE_STATIC_DIR=$SCM_OUTPUT_DIR/packages/node/staitc
 NODE_DIR=packages/node
 
@@ -40,6 +40,10 @@ rm -rf node_modules
 
 # reinstall node deps
 yarn --force --production
+
+# 编译web
+cd $HOME_DIR
+sh $HOME_DIR/shell/web.build.sh
 
 # mv static file
 mkdir -p $NODE_STATIC_DIR

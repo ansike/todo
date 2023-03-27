@@ -65,7 +65,7 @@ const getEnvFile = () => {
       useFactory: (configService: ConfigService) => {
         const config = configService.get('mysql');
         logger.log(`mysql config host:${config.host} port:${config.port} username: ${config.username}`);
-        logger.debug(`mysql config password: ${JSON.stringify(config.password)}`);
+        // logger.debug(`mysql config password: ${JSON.stringify(config.password)}`);
         return { ...config, entities: [User, Task, TaskHistory, TaskMember] };
       },
       inject: [ConfigService],

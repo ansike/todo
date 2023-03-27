@@ -13,11 +13,9 @@ export const formatDateToRead = (
   form = "YYYY-MM-DD HH:mm:ss"
 ) => {
   const localDate = dayjs.utc(date).local();
-  if (localDate.diff(new Date(), "day") < 0) {
+  if (Math.abs(localDate.diff(new Date(), "day")) < 0) {
     return localDate.format(form);
-  } else if (localDate.diff(new Date(), "day") <= 1) {
-    return  localDate.format("HH:mm:ss");
-  } else if (localDate.diff(new Date(), "year") <= 1) {
+  } else if (Math.abs(localDate.diff(new Date(), "year")) <= 1) {
     return localDate.format("MM-DD HH:mm:ss");
   } else {
     return localDate.format(form);

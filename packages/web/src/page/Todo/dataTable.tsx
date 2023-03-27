@@ -7,12 +7,18 @@ import {
   Space,
   Select,
 } from "@arco-design/web-react";
-import { OPERATION_TYPE, TaskQuery, TaskType } from "./type";
+import {
+  OPERATION_TYPE,
+  TaskQuery,
+  TaskType,
+  TASK_STATUS,
+  TASK_STATUS_MAP,
+} from "./type";
 import { IconCloseCircle, IconPlus } from "@arco-design/web-react/icon";
 import s from "./index.module.less";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../components/CheckLogin/context";
-import { formatDateToRead, formatTime } from "../../utils/format";
+import { formatDateToRead } from "../../utils/format";
 import { EditableCell, EditableRow } from "./dataItem";
 import { request } from "../../utils/fetch";
 import dayjs from "dayjs";
@@ -37,6 +43,7 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
   const [taskId, setTaskId] = useState<string>("");
   const [createUser, setCreateUser] = useState<string>();
   const [assignUser, setAssignUser] = useState<string>();
+  const [status, setStatus] = useState<string>(TASK_STATUS.created);
   const [queryObj, setQueryObj] = useState<TaskQuery>({
     page: 1,
     limit: 10,
@@ -101,7 +108,11 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
     }
   };
 
-  const updateTask = async (operationType: OPERATION_TYPE, row: TaskType) => {
+  const updateTask = async (
+    operationType: OPERATION_TYPE,
+    row: TaskType,
+    toast = "编辑成功"
+  ) => {
     const res = await request<TaskType>(`/api/task/${row.id}`, {
       method: "put",
       data: {
@@ -109,8 +120,8 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
         operationType,
       },
     });
-    if (res?.id) {
-      Message.success("编辑成功");
+    if (res?.id && toast) {
+      Message.success(toast);
       refresh(queryObj);
     }
   };
@@ -124,7 +135,6 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
     {
       title: "截止时间",
       dataIndex: "plan_finish_time",
-      sorter: (a, b) => a.plan_finish_time - b.plan_finish_time,
       render(time, row) {
         return time ? (
           formatDateToRead(time)
@@ -149,7 +159,9 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
       dataIndex: "createUser",
       render(createUser, row) {
         return (
-          <div onClick={() => openDrawer(row)}>{createUser?.username}</div>
+          <div style={{ cursor: "pointer" }} onClick={() => openDrawer(row)}>
+            {createUser?.username}
+          </div>
         );
       },
     },
@@ -160,16 +172,21 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
       sorter: (a, b) => a.create_time - b.create_time,
       render(time, row) {
         return (
-          <div onClick={() => openDrawer(row)}>{formatDateToRead(time)}</div>
+          <div style={{ cursor: "pointer" }} onClick={() => openDrawer(row)}>
+            {formatDateToRead(time)}
+          </div>
         );
       },
     },
     {
       title: "任务ID",
-      sorter: (a, b) => a.id - b.id,
       dataIndex: "id",
       render(id, row) {
-        return <div onClick={() => openDrawer(row)}>{id}</div>;
+        return (
+          <div style={{ cursor: "pointer" }} onClick={() => openDrawer(row)}>
+            {id}
+          </div>
+        );
       },
     },
   ];
@@ -184,6 +201,34 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
           </Button>
         </div>
         <div className={s.right}>
+          <div className={s.filterItem}>
+            任务状态：
+            <Select
+              value={status}
+              placeholder="选择任务状态"
+              size="small"
+              style={{ width: 154 }}
+              allowClear
+              onChange={(val) => {
+                setStatus(val);
+                const newQuery = {
+                  ...queryObj,
+                  status: val || TASK_STATUS.created,
+                };
+                setQueryObj(newQuery);
+                refresh(newQuery);
+              }}
+            >
+              {TASK_STATUS_MAP.map((status) => {
+                const { label, value } = status;
+                return (
+                  <Option key={value} value={value}>
+                    {label}
+                  </Option>
+                );
+              })}
+            </Select>
+          </div>
           <div className={s.filterItem}>
             创建人：
             <Select
@@ -279,6 +324,23 @@ const TaskTable: React.FC<TaskTableType> = ({ total, data, refresh }) => {
           ) as any
         }
         data={tasks}
+        rowSelection={{
+          type: "checkbox",
+          checkAll: false,
+          onSelect: async (_, record) => {
+            await updateTask(
+              OPERATION_TYPE.DONE,
+              record as TaskType,
+              "完成任务"
+            );
+            await refresh(queryObj);
+          },
+          checkboxProps: (record) => {
+            return {
+              disabled: record.status === TASK_STATUS.done,
+            };
+          },
+        }}
       />
       {taskId && (
         <DetailDrawer

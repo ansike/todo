@@ -1,31 +1,45 @@
 version: '3'
-
+networks:
+  my-network:
+    driver: bridge
 services:
   app:
-    image: node
-    command: npm start
-    working_dir: /app
+    image: ansike/ansike:todo-v1
+    # command: "sleep 3600"
+    working_dir: /usr/src/app
     volumes:
-      - ./app:/app
+      - ./usr/src/app:/app
     ports:
-      - 3000:3000
+      - 4001:4001
     depends_on:
-      - db
+      - mysql
       - redis
-  db:
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: todopw
+      MYSQL_DATABASE: todo_db
+    networks:
+      - my-network
+  mysql:
     image: mysql:5.7
     environment:
-      REDIS_HOST: 127.0.0.1
-      REDIS_PORT: 6379
-      MYSQL_HOST: 127.0.0.1
-      MYSQL_PORT: 3306
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: todopw
       MYSQL_DATABASE: todo_db
-      MYSQL_USERNAME: todo_user
-      MYSQL_PASSWORD: todopw
-    ports:
-      - 3306:3306
+    volumes:
+      # 数据挂载
+      #- /root/mysql/data/:/var/lib/mysql/
+      # 配置挂载
+      #- /root/mysql/conf/:/etc/mysql/conf.d/
+      # 初始化目录挂载，注意此处我只跑了这个挂载，只是为了说明其他配置不应该数据初始化
+      - ./packages/node/src/todo.sql:/docker-entrypoint-initdb.d/todo.sql
+    networks:
+      - my-network
   redis:
     image: redis
-    ports:
-      - 6379:6379
+    networks:
+      - my-network
+

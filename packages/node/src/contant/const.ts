@@ -16,4 +16,5 @@ export const TASK_STATUS = {
   created: 'created',
   closed: 'closed',
   done: 'done',
+  restart: 'restart',
 };

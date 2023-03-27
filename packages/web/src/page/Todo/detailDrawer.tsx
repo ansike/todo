@@ -25,7 +25,7 @@ import { useAsync, useAsyncFn } from "react-use";
 import { request } from "../../utils/fetch";
 import HistoryDrawer from "./historyDrawer";
 import s from "./index.module.less";
-import { OPERATION_TYPE, TaskType } from "./type";
+import { OPERATION_TYPE, TaskType, TASK_STATUS } from "./type";
 
 interface DetailDrawerType {
   taskId: string;
@@ -47,15 +47,27 @@ const DetailDrawer: React.FC<DetailDrawerType> = ({ close, taskId }) => {
     setDescription(value?.description || "");
   }, [value]);
 
+  const updateTask = async (
+    operationType: OPERATION_TYPE,
+    row: Partial<TaskType>,
+    toast?: string
+  ) => {
+    const res = await request<TaskType>(`/api/task/${taskId}`, {
+      method: "put",
+      data: {
+        ...row,
+        operationType,
+      },
+    });
+    if (res?.id && toast) {
+      Message.success(toast);
+      close();
+    }
+  };
+
   const change = useCallback(
     debounce(async (v: string) => {
-      await request(`/api/task/${taskId}`, {
-        method: "put",
-        data: {
-          description: v,
-          operationType: OPERATION_TYPE.UPDATE_DESCRIPTION,
-        },
-      });
+      await updateTask(OPERATION_TYPE.UPDATE_DESCRIPTION, { description: v });
     }, 1000),
     [taskId]
   );
@@ -81,15 +93,17 @@ const DetailDrawer: React.FC<DetailDrawerType> = ({ close, taskId }) => {
             },
             onOk: () => {
               return new Promise((resolve, reject) => {
-                deleteFn().then((res) => {
-                  close();
-                  Message.success({
-                    content: "已删除",
+                deleteFn()
+                  .then((res) => {
+                    close();
+                    Message.success({
+                      content: "已删除",
+                    });
+                    resolve(res);
+                  })
+                  .catch(() => {
+                    reject();
                   });
-                  resolve(res);
-                }).catch(()=>{
-                  reject();
-                });
               }).catch((e) => {
                 Message.error({
                   content: "Error occurs!",
@@ -132,7 +146,14 @@ const DetailDrawer: React.FC<DetailDrawerType> = ({ close, taskId }) => {
       >
         <div>
           <div className={`${s.detailItem} ${s.title}`}>
-            <Checkbox>{value?.title}</Checkbox>
+            <Checkbox
+              disabled={value?.status === TASK_STATUS.done}
+              onChange={(checked) => {
+                checked && updateTask(OPERATION_TYPE.DONE, {}, "完成任务");
+              }}
+            >
+              {value?.title}
+            </Checkbox>
           </div>
           <div className={`${s.detailItem} ${s.description}`}>
             <IconSort className={s.detailLeft} />
@@ -153,7 +174,11 @@ const DetailDrawer: React.FC<DetailDrawerType> = ({ close, taskId }) => {
         </div>
       </Drawer>
       {historyVisible && (
-        <HistoryDrawer taskId={taskId} visible={historyVisible} close={()=>setHistoryVisible(false)} />
+        <HistoryDrawer
+          taskId={taskId}
+          visible={historyVisible}
+          close={() => setHistoryVisible(false)}
+        />
       )}
     </>
   );

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query, Req  } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -15,7 +25,7 @@ export class UserController {
   async findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Req() req
+    @Req() req,
   ): Promise<PaginatedUsers> {
     return this.userService.findAll(page, limit);
   }
@@ -31,7 +41,10 @@ export class UserController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUser: User): Promise<User | undefined> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUser: User,
+  ): Promise<User | undefined> {
     return this.userService.update(id, updateUser);
   }
 

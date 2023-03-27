@@ -1,7 +1,5 @@
 import { UserType } from "../../components/CheckLogin/type";
 
-
-
 export type TaskType = {
   id: string;
   title: string;
@@ -10,6 +8,7 @@ export type TaskType = {
   assignee_id: string;
   plan_finish_time: string | null; // 创建时可能不存在
   actual_finish_time: string;
+  status: string;
   create_time: Date | string;
   createUser?: UserType;
   assigneeUser?: UserType;
@@ -53,3 +52,25 @@ export type TaskQuery = {
   plan_finish_time?: "ASC" | "DESC";
   actual_finish_time?: "ASC" | "DESC";
 };
+
+export const TASK_STATUS = {
+  created: "created",
+  closed: "closed",
+  done: "done",
+  restart: "restart",
+};
+
+export const TASK_STATUS_MAP = [
+  {
+    label: "未完成",
+    value: TASK_STATUS.created,
+  },
+  {
+    label: "已完成",
+    value: TASK_STATUS.done,
+  },
+  {
+    label: "全部任务",
+    value: "all",
+  },
+];
