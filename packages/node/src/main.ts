@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { IConfig } from './config/configuration';
 import { CheckLoginMiddleware } from './middleware/checkLogin.middleware';
@@ -14,6 +15,14 @@ async function bootstrap() {
   app.use(SessionMiddleware(redisConfig));
   app.use(CheckLoginMiddleware(app));
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  const options = new DocumentBuilder()
+    .setTitle('todo-serve')
+    .setDescription('接口文档')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('/api/doc', app, document);
 
   await app.listen(process.env.PORT || 4000);
 }
