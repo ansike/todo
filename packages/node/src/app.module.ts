@@ -1,9 +1,10 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RouterModule, Routes } from 'nest-router';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './core/auth/auth.module';
-import { IndexModule } from './core/index/index.module';
+// import { IndexModule } from './core/index/index.module';
 import { UserModule } from './core/user/user.module';
 import Configuration from './config/configuration';
 import { User } from './core/user/user.entity';
@@ -13,6 +14,7 @@ import { LoggingMiddleware } from './middleware/log.middleware';
 import { TaskHistoryModule } from './core/taskHistory/taskHistory.module';
 import { TaskHistory } from './core/taskHistory/taskHistory.entity';
 import { TaskMember } from './core/task/task.member.entity';
+import path from 'path';
 
 const logger = new Logger('app.module');
 
@@ -38,10 +40,10 @@ export const routes: Routes = [
       },
     ],
   },
-  {
-    path: '*',
-    module: IndexModule,
-  },
+  // {
+  //   path: '*',
+  //   module: IndexModule,
+  // },
 ];
 
 const getEnvFile = () => {
@@ -51,6 +53,9 @@ const getEnvFile = () => {
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'static'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [Configuration],
@@ -70,7 +75,7 @@ const getEnvFile = () => {
     TaskModule,
     TaskHistoryModule,
     AuthModule,
-    IndexModule,
+    // IndexModule,
   ],
   controllers: [],
   providers: [],

@@ -1,0 +1,29 @@
+# 基础镜像详情 https://cloud.bytedance.net/image/362169
+FROM hub.byted.org/c_platform/platform_node:14.18.1-buster-slim as builder
+
+WORKDIR /usr/src/app
+
+COPY ./ ./
+
+# 项目id seed平台构建时传的参数
+ARG project_id
+ARG debug_mode
+
+RUN set -x \
+  && chmod +x ./shell/scm_build_private_platform_node.sh \
+  && CUSTOM_SEED_ID=${project_id} CUSTOM_DEBUG_MODE=${debug_mode} bash ./shell/scm_build_private_platform_node.sh \
+  && echo 'docker shell build completed'
+
+FROM hub.byted.org/c_platform/platform_node:14.18.1-buster-slim
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/output ./output
+
+ENV NODE_ENV=production \
+  PORT=3001
+
+EXPOSE 3001
+
+# same with bootstrap.sh
+CMD cd output/packages/platform-node && yarn start:prod
