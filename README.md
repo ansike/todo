@@ -6,6 +6,8 @@
 docker-compose up
 
 # 访问 http://localhost:4001/
+# 内置了两个用户，用户名是A1，A2密码都是 xxxxx
+# 支持调用接口CRUD用户 文档站 http://localhost:4001/doc/
 ```
 
 2. 本地启动代码
@@ -33,4 +35,17 @@ cd packages/web && yarn dev
 构建服务镜像
 ```
 docker build -f Dockerfile.node -t todo-v1 .
+```
+
+```shell
+# 创建用户示例
+curl --location --request POST 'http://localhost:4001/api/user' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: connect.sid=s%3A5lHr0TXuqIvAmApB-lLkU3RW2syC09qD.%2BhiMkc8dW%2FfCQOIdMmKC8lhBd05rr7moQRPxbp1ov6o; tenant=s%3AfSfMo3bQmchNyXzmEgGUrYeIx6gzJ_Vv.3QtYSczToYea7X7qk%2Bf6tbyoMrY%2BGUnB8oczzxJLMGM' \
+--data-raw '{
+    "username": "A2",
+    "nickname": "A2",
+    "email": "A@qq.com",
+    "password": "xxxxxx"
+}'
 ```

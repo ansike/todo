@@ -5,6 +5,8 @@ WORKDIR /usr/src/app
 COPY ./ ./
 
 RUN set -x \
+  && chmod +x ./shell/web.build.sh \
+  && bash ./shell/web.build.sh \
   && chmod +x ./shell/node.build.sh \
   && bash ./shell/node.build.sh \
   && echo 'docker shell build completed'

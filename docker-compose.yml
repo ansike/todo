@@ -5,6 +5,7 @@ networks:
 services:
   app:
     image: ansike/ansike:todo-v1
+    #image: todo-v1
     # command: "sleep 3600"
     working_dir: /usr/src/app
     volumes:
@@ -22,6 +23,7 @@ services:
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: todopw
       MYSQL_DATABASE: todo_db
+      TZ: Asia/Shanghai
     networks:
       - my-network
   mysql:

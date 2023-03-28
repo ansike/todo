@@ -41,11 +41,7 @@ rm -rf node_modules
 # reinstall node deps
 yarn --force --production
 
-# 编译web
-cd $HOME_DIR
-sh $HOME_DIR/shell/web.build.sh
-
 # mv static file
 mkdir -p $NODE_STATIC_DIR
-cp -r $WEB_DIR/ $SCM_OUTPUT_DIR/packages/node/staitc
+cp -r $WEB_DIR/ $NODE_STATIC_DIR/
 

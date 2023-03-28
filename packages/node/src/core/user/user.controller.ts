@@ -19,7 +19,23 @@ export interface PaginatedUsers {
 
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {
+    this.userService.findAll(1, 10).then((res) => {
+      if (res.total !== 0) return;
+      this.userService.create({
+        username: 'A1',
+        nickname: 'A1',
+        email: 'A@qq.com',
+        password: 'xxxxx',
+      });
+      this.userService.create({
+        username: 'A2',
+        nickname: 'A2',
+        email: 'A@qq.com',
+        password: 'xxxxx',
+      });
+    });
+  }
 
   @Get()
   async findAll(
